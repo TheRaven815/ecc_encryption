@@ -99,15 +99,20 @@ class KeyManagementTab(ctk.CTkFrame):
                      font=ctk.CTkFont(family=FONT_UI, size=10, weight="bold"),
                      text_color=TEXT_MUTED).grid(row=4, column=0, sticky="w", padx=20)
 
-        pw_frame = ctk.CTkFrame(left, fg_color=BG_CARD2, corner_radius=10, border_width=1, border_color=BORDER)
-        pw_frame.grid(row=5, column=0, sticky="ew", padx=20, pady=(6, 6))
-        pw_frame.grid_columnconfigure(0, weight=1)
-        self._pw_entry = ctk.CTkEntry(pw_frame, placeholder_text="Optional passphrase…",
+        self._pw_container = ctk.CTkFrame(left, fg_color=BG_CARD2, corner_radius=10, border_width=1, border_color=BORDER)
+        self._pw_container.grid(row=5, column=0, sticky="ew", padx=20, pady=(6, 6))
+        self._pw_container.grid_columnconfigure(0, weight=1)
+        self._pw_entry = ctk.CTkEntry(self._pw_container, placeholder_text="Optional passphrase…",
                                        show="*", border_width=0,
                                        fg_color="transparent",
                                        font=ctk.CTkFont(family=FONT_UI, size=12),
                                        text_color=TEXT_PRIMARY)
         self._pw_entry.grid(row=0, column=0, sticky="ew", padx=10, pady=6)
+        
+        # Focus effects for password field
+        self._pw_entry.bind("<FocusIn>", lambda _: self._pw_container.configure(border_color=ACCENT_BLUE))
+        self._pw_entry.bind("<FocusOut>", lambda _: self._pw_container.configure(border_color=BORDER))
+
         self._show_pw = ctk.CTkCheckBox(left, text="Show password",
                                          font=ctk.CTkFont(family=FONT_UI, size=11),
                                          text_color=TEXT_MUTED,

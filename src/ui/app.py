@@ -222,15 +222,24 @@ class ModernECCApp(ctk.CTk):
         self._content = tk.Frame(body, bg=BG_DEEP)
         self._content.pack(side="left", fill="both", expand=True)
 
-        # Pre-build tab frames
+        # Container for tabs to provide consistent margins (20px)
+        # Tab frames will fill this container and switch via tkraise()
+        self._tab_container = ctk.CTkFrame(self._content, fg_color="transparent")
+        self._tab_container.pack(fill="both", expand=True, padx=20, pady=20)
+
+        # Pre-build tab frames and place them all in the same spot (stacked).
         self._tab_frames["key_management"] = KeyManagementTab(
-            self._content, self.engine, fg_color=BG_DEEP)
+            self._tab_container, self.engine, fg_color=BG_DEEP)
         self._tab_frames["sign"] = SignTab(
-            self._content, self.engine,
+            self._tab_container, self.engine,
             on_signature_generated=self.sync_signature,
             fg_color=BG_DEEP)
         self._tab_frames["verify"] = VerifyTab(
-            self._content, self.engine, fg_color=BG_DEEP)
+            self._tab_container, self.engine, fg_color=BG_DEEP)
+
+        # place() with relwidth/relheight=1 stacks frames inside the container
+        for frame in self._tab_frames.values():
+            frame.place(relx=0, rely=0, relwidth=1.0, relheight=1.0)
 
         # ── Status bar ────────────────────────────────────────────────────────
         tk.Frame(self, bg=BORDER, height=1).pack(fill="x")
@@ -242,19 +251,11 @@ class ModernECCApp(ctk.CTk):
     def _switch_tab(self, key: str):
         if self._current_tab == key:
             return
-        # Hide all
-        for frame in self._tab_frames.values():
-            frame.pack_forget()
-        # Deselect all nav buttons
+        # Bring the selected frame to the top – no pack/unpack → no flicker
+        self._tab_frames[key].tkraise()
         for k, btn in self._nav_btns.items():
-            if k == key:
-                btn.select()
-            else:
-                btn.deselect()
-        # Show selected
-        self._tab_frames[key].pack(fill="both", expand=True, padx=18, pady=14)
+            btn.select() if k == key else btn.deselect()
         self._current_tab = key
-
         names = {"key_management": "Key Management", "sign": "Sign Message", "verify": "Verify Signature"}
         self._status_bar.set(f"Active view: {names.get(key, key)}", ACCENT_CYAN)
 

@@ -71,6 +71,8 @@ class SignTab(ctk.CTkFrame):
                                           corner_radius=10)
         self._msg_text.grid(row=2, column=0, padx=18, pady=(0, 18), sticky="nsew")
         self._msg_text.bind("<KeyRelease>", self._update_char_count)
+        self._msg_text.bind("<FocusIn>", lambda _: self._msg_text.configure(border_color=ACCENT_ORANGE))
+        self._msg_text.bind("<FocusOut>", lambda _: self._msg_text.configure(border_color=BORDER))
 
         # Helper hint
         ctk.CTkLabel(left,
@@ -123,6 +125,8 @@ class SignTab(ctk.CTkFrame):
             font=(FONT_MONO, 11), text_color="#94a3b8",
             corner_radius=10)
         self._sig_text.grid(row=2, column=0, padx=18, pady=(0, 8), sticky="nsew")
+        self._sig_text.bind("<FocusIn>", lambda _: self._sig_text.configure(border_color=ACCENT_GREEN))
+        self._sig_text.bind("<FocusOut>", lambda _: self._sig_text.configure(border_color=BORDER))
 
         # Status label – inside sig_card so it doesn't steal height from the card
         self._status_lbl = ctk.CTkLabel(

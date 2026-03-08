@@ -61,6 +61,8 @@ class VerifyTab(ctk.CTkFrame):
             left, fg_color=BG_DEEP, border_color=BORDER, border_width=1,
             font=(FONT_UI, 12), text_color=TEXT_PRIMARY, corner_radius=10, height=100)
         self._msg_text.grid(row=2, column=0, padx=18, pady=(0, 8), sticky="nsew")
+        self._msg_text.bind("<FocusIn>", lambda _: self._msg_text.configure(border_color=ACCENT_BLUE))
+        self._msg_text.bind("<FocusOut>", lambda _: self._msg_text.configure(border_color=BORDER))
 
         ctk.CTkFrame(left, fg_color=BORDER, height=1).grid(row=3, column=0, sticky="ew", padx=18, pady=4)
 
@@ -72,6 +74,8 @@ class VerifyTab(ctk.CTkFrame):
             left, fg_color=BG_DEEP, border_color=BORDER, border_width=1,
             font=(FONT_MONO, 11), text_color="#94a3b8", corner_radius=10)
         self._sig_text.grid(row=5, column=0, padx=18, pady=(0, 18), sticky="nsew")
+        self._sig_text.bind("<FocusIn>", lambda _: self._sig_text.configure(border_color=ACCENT_PURPLE))
+        self._sig_text.bind("<FocusOut>", lambda _: self._sig_text.configure(border_color=BORDER))
         left.grid_rowconfigure(5, weight=2)
 
         # ── Right: action + result ────────────────────────────────────────────
